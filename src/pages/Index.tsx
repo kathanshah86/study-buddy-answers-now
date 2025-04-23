@@ -7,7 +7,7 @@ import { ChatInput } from "@/components/ChatInput";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/use-toast";
-import { BookOpen, BrainCircuit, Camera, Image, Mic } from "lucide-react";
+import { BookOpen, BrainCircuit, Camera, Image, File } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageUploadCard } from "@/components/ImageUploadCard";
 
@@ -111,7 +111,7 @@ const Index = () => {
     const options = [
       { icon: Camera, label: "Take Photo", action: () => setShowUploadCard(true) },
       { icon: Image, label: "Upload Image", action: () => setShowUploadCard(true) },
-      { icon: Mic, label: "Voice Question", action: () => toast({ title: "Coming Soon!", description: "Voice input will be available soon!" }) }
+      { icon: File, label: "Upload PDF", action: () => setShowUploadCard(true) }
     ];
 
     return (
