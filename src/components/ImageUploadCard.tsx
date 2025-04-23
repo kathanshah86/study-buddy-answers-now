@@ -1,9 +1,11 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Camera, Check, Edit, Image, X } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
 
 interface ImageUploadCardProps {
   onClose: () => void;
@@ -13,6 +15,56 @@ interface ImageUploadCardProps {
 export function ImageUploadCard({ onClose, onComplete }: ImageUploadCardProps) {
   const [stage, setStage] = useState<'upload' | 'processing' | 'confirm'>('upload');
   const [extractedText, setExtractedText] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image under 5MB",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setSelectedImage(e.target?.result as string);
+      simulateOCR();
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleCameraClick = () => {
+    // Open file input with camera as source if supported
+    if (fileInputRef.current) {
+      fileInputRef.current.setAttribute('capture', 'environment');
+      fileInputRef.current.click();
+    }
+  };
+  
+  const handleUploadClick = () => {
+    // Open file input for regular upload
+    if (fileInputRef.current) {
+      fileInputRef.current.removeAttribute('capture');
+      fileInputRef.current.click();
+    }
+  };
   
   // Mock OCR function - in a real app, this would call an API
   const simulateOCR = () => {
@@ -38,7 +90,7 @@ export function ImageUploadCard({ onClose, onComplete }: ImageUploadCardProps) {
               <Button 
                 variant="outline" 
                 className="flex flex-col h-auto py-6 px-6 border-purple-200 hover:bg-purple-50"
-                onClick={simulateOCR}
+                onClick={handleCameraClick}
               >
                 <Camera size={32} className="mb-2 text-purple-600" />
                 <span>Take Photo</span>
@@ -47,11 +99,20 @@ export function ImageUploadCard({ onClose, onComplete }: ImageUploadCardProps) {
               <Button 
                 variant="outline" 
                 className="flex flex-col h-auto py-6 px-6 border-purple-200 hover:bg-purple-50"
-                onClick={simulateOCR}
+                onClick={handleUploadClick}
               >
                 <Image size={32} className="mb-2 text-purple-600" />
                 <span>Upload Image</span>
               </Button>
+              
+              {/* Hidden file input */}
+              <Input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
             </div>
             <p className="text-xs text-gray-500">I'll read your question from the image</p>
           </div>
@@ -91,6 +152,16 @@ export function ImageUploadCard({ onClose, onComplete }: ImageUploadCardProps) {
                 <X size={16} />
               </Button>
             </div>
+            
+            {selectedImage && (
+              <div className="mb-3 max-h-48 overflow-hidden rounded-md">
+                <img 
+                  src={selectedImage} 
+                  alt="Uploaded" 
+                  className="w-full h-auto object-contain" 
+                />
+              </div>
+            )}
             
             <div className="bg-purple-50 p-3 rounded-md border border-purple-100 mb-4">
               <Textarea 
