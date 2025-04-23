@@ -1,5 +1,5 @@
 
-export interface SampleQA {
+interface SampleQA {
   question: string;
   answer: string;
   keywords: string[];

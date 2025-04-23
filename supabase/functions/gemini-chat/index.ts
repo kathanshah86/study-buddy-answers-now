@@ -1,7 +1,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { GoogleGenerativeAI } from "npm:@google/generative-ai";
-import { findAnswer } from "../../src/data/sampleAnswers.ts";
+import { findAnswer } from "../sampleAnswers.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
