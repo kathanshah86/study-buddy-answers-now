@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Message } from "@/types/chat";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
-import { findAnswer } from "@/data/sampleAnswers";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/use-toast";
 
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -30,7 +31,7 @@ const Index = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = (content: string) => {
+  const handleSendMessage = async (content: string) => {
     // Add user message
     const userMessage: Message = {
       id: uuidv4(),
@@ -42,18 +43,31 @@ const Index = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
     
-    // Simulate typing delay for bot response
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('gemini-chat', {
+        body: { content }
+      });
+
+      if (error) throw error;
+
       const botMessage: Message = {
         id: uuidv4(),
-        content: findAnswer(content),
+        content: data.answer,
         sender: 'bot',
         timestamp: new Date()
       };
       
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to get an answer. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   return (
