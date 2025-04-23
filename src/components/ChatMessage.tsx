@@ -1,7 +1,7 @@
 
 import { Message } from "@/types/chat";
 import { cn } from "@/lib/utils";
-import { Bot, User } from "lucide-react";
+import { BookOpen, User } from "lucide-react";
 
 interface ChatMessageProps {
   message: Message;
@@ -16,22 +16,26 @@ export function ChatMessage({ message }: ChatMessageProps) {
       isBot ? "justify-start" : "justify-end"
     )}>
       <div className={cn(
-        "max-w-[85%] rounded-2xl p-4 shadow-sm",
+        "max-w-[85%] rounded-2xl p-4 shadow-sm transition-all",
         isBot 
-          ? "bg-white border border-gray-100 rounded-tl-none" 
-          : "bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-tr-none"
+          ? "bg-white border border-purple-100 rounded-tl-none" 
+          : "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-tr-none"
       )}>
         {isBot && (
           <div className="flex items-center mb-2">
-            <Bot size={18} className="mr-2 text-blue-500" />
-            <span className="font-medium text-blue-600">Study Buddy</span>
+            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-2">
+              <BookOpen size={16} className="text-purple-600" />
+            </div>
+            <span className="font-medium text-purple-700">NCERT Buddy</span>
           </div>
         )}
         
         {!isBot && (
           <div className="flex items-center mb-2 justify-end">
             <span className="font-medium text-blue-100">You</span>
-            <User size={18} className="ml-2 text-blue-100" />
+            <div className="w-8 h-8 rounded-full bg-blue-400 ml-2 flex items-center justify-center">
+              <User size={16} className="text-white" />
+            </div>
           </div>
         )}
         
