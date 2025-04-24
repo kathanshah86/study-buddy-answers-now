@@ -23,9 +23,15 @@ serve(async (req) => {
       // Update to use the most recent model version
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      const prompt = `You are a helpful study assistant. Answer the following question in a clear and educational way: ${content}`;
+      const prompt = `You are a concise study assistant for students. Provide direct, clear answers to this question in 3-5 sentences maximum. Be precise and focused. Don't include unnecessary introduction or conclusion: ${content}`;
       
-      const result = await model.generateContent(prompt);
+      const result = await model.generateContent({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          maxOutputTokens: 250,  // Limit the token length for shorter responses
+          temperature: 0.4,      // Lower temperature for more focused answers
+        }
+      });
       const response = await result.response;
       const text = response.text();
 
