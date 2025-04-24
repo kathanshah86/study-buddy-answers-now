@@ -1,4 +1,4 @@
-# 📚 NCERT Chatbot 🤖
+# 📚 NCERT Doubt solving Chatbot 🤖
 
 A smart AI-powered chatbot designed to assist students with NCERT-based questions. This chatbot understands user queries from NCERT textbooks and responds with accurate, well-structured answers. Ideal for school students, educators, and ed-tech platforms.
 
@@ -18,9 +18,9 @@ A smart AI-powered chatbot designed to assist students with NCERT-based question
 ## 🛠️ Tech Stack
 
 - **Frontend**: HTML/CSS/JS or React (Optional UI)
-- **Backend**: Python (Flask or FastAPI)
-- **AI/NLP**: Transformers (or Custom ML Model)
-- **OCR**: Tesseract or EasyOCR
+- **Backend**: Python 
+- **AI/NLP**: NLTK
+- **OCR**: OpenCV , EasyOCR
 - **Data**: Structured CSV dataset generated from NCERT PDFs
 - **Database**: SQLite or MongoDB (for advanced logging)
 
